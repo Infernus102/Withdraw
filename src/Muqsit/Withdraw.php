@@ -53,21 +53,23 @@ class Withdraw extends PluginBase implements Listener{
 	}
 
 	public function PlayerItemHeld(PlayerItemHeldEvent $ev){
+	$configItem = $this->getConfig("item");
         $item = $ev->getItem();
         $money = $item->getDamage();
         $player = $ev->getPlayer();
         if($item instanceof Item){
             switch($item->getId()){
-                case 339:
+                case $configItem:
                     $player->sendTip("§b§lCheque of §r§e$$money");
                 break;
             }
         }
    }
 	public function onPlayerInteract(PlayerInteractEvent $event){
+		$cfgItem = $this->getConfig("item");
 		$p = $event->getPlayer();
 		$i = $event->getItem();
-		if($i->getID() !== 339 || ($money = $i->getDamage()) < 1) return;
+		if($i->getID() !== $cfgItem || ($money = $i->getDamage()) < 1) return;
 		if(!isset($this->touch[$n = $p->getName()])) $this->touch[$n] = 0;
 		$c = microtime(true) - $this->touch[$n];
 		if($c > 0){
