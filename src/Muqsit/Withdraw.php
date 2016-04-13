@@ -16,9 +16,6 @@ use pocketmine\event\player\PlayerItemHeldEvent;
 class Withdraw extends PluginBase implements Listener{
 
 	public function onEnable(){
-		@mkdir($this->getDataFolder());
-                $this->saveDefaultConfig();
-                $this->reloadConfig();
 		$this->getServer()->getLogger()->info("§8[§aWithdraw§8] §eFinding an economy plugin...");
 		$pm = $this->getServer()->getPluginManager();
 		if(!($this->money = $pm->getPlugin("PocketMoney")) && !($this->money = $pm->getPlugin("EconomyAPI")) && !($this->money = $pm->getPlugin("MassiveEconomy")) && !($this->money = $pm->getPlugin("Money"))){
@@ -33,7 +30,6 @@ class Withdraw extends PluginBase implements Listener{
 	public function onCommand(CommandSender $sender, Command $cmd, $label, array $sub){
 		if(!isset($sub[0])) return false;
 		$mm = "§8[§aWithdraw§8] ";
-		$item = $this->getConfig("item");
 		if(!$sender instanceof Player){
 			$r = $mm . ("§cPlease run this command in game");
 		}elseif(!is_numeric($sub[0]) || $sub[0] < 1){
@@ -44,7 +40,7 @@ class Withdraw extends PluginBase implements Listener{
 				$r = $mm . ("§cYou don't have enough money! Your current money : §e$") . $this->getMoney($sender);
 			}else{
 				$this->giveMoney($sender, -$sub[0]);
-				$sender->getInventory()->addItem(Item::get($item, $sub[0], 1));
+				$sender->getInventory()->addItem(Item::get(339, $sub[0], 1));
 				$r = $mm . ("§aYou withdrew a cheque of §e$" . $sub[0] . ". §aYour money : §e$") . $this->getMoney($sender);
 			}
 		}
@@ -53,23 +49,21 @@ class Withdraw extends PluginBase implements Listener{
 	}
 
 	public function PlayerItemHeld(PlayerItemHeldEvent $ev){
-	$configItem = $this->getConfig("item");
         $item = $ev->getItem();
         $money = $item->getDamage();
         $player = $ev->getPlayer();
         if($item instanceof Item){
             switch($item->getId()){
-                case '$configItem':
+                case 339:
                     $player->sendTip("§b§lCheque of §r§e$$money");
                 break;
             }
         }
    }
 	public function onPlayerInteract(PlayerInteractEvent $event){
-		$cfgItem = $this->getConfig("item");
 		$p = $event->getPlayer();
 		$i = $event->getItem();
-		if($i->getID() !== $cfgItem || ($money = $i->getDamage()) < 1) return;
+		if($i->getID() !== 339 || ($money = $i->getDamage()) < 1) return;
 		if(!isset($this->touch[$n = $p->getName()])) $this->touch[$n] = 0;
 		$c = microtime(true) - $this->touch[$n];
 		if($c > 0){
