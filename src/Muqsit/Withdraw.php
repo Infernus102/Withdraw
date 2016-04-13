@@ -16,6 +16,9 @@ use pocketmine\event\player\PlayerItemHeldEvent;
 class Withdraw extends PluginBase implements Listener{
 
 	public function onEnable(){
+		@mkdir($this->getDataFolder());
+                $this->saveDefaultConfig();
+                $this->reloadConfig();
 		$this->getServer()->getLogger()->info("§8[§aWithdraw§8] §eFinding an economy plugin...");
 		$pm = $this->getServer()->getPluginManager();
 		if(!($this->money = $pm->getPlugin("PocketMoney")) && !($this->money = $pm->getPlugin("EconomyAPI")) && !($this->money = $pm->getPlugin("MassiveEconomy")) && !($this->money = $pm->getPlugin("Money"))){
@@ -29,7 +32,10 @@ class Withdraw extends PluginBase implements Listener{
 
 	public function onCommand(CommandSender $sender, Command $cmd, $label, array $sub){
 		if(!isset($sub[0])) return false;
-		$mm = "§8[§aWithdraw§8] ";
+		$cfg = $this->getConfig();
+		$money = $this->getMoney($sender);
+		$nomoney = $cfg->get("no-money");
+		$mm = $cfg->get("prefix");
 		if(!$sender instanceof Player){
 			$r = $mm . ("§cPlease run this command in game");
 		}elseif(!is_numeric($sub[0]) || $sub[0] < 1){
@@ -37,7 +43,7 @@ class Withdraw extends PluginBase implements Listener{
 		}else{
 			$sub[0] = floor($sub[0]);
 			if($this->getMoney($sender) < $sub[0]){
-				$r = $mm . ("§cYou don't have enough money! Your current money : §e$") . $this->getMoney($sender);
+				$r = $mm . ("$nomoney");
 			}else{
 				$this->giveMoney($sender, -$sub[0]);
 				$sender->getInventory()->addItem(Item::get(339, $sub[0], 1));
@@ -52,10 +58,12 @@ class Withdraw extends PluginBase implements Listener{
         $item = $ev->getItem();
         $money = $item->getDamage();
         $player = $ev->getPlayer();
+        $cfg = $this->getConfig();
+        $tip = $cfg->get("cheque-held");
         if($item instanceof Item){
             switch($item->getId()){
                 case 339:
-                    $player->sendTip("§b§lCheque of §r§e$$money");
+                    $player->sendTip($tip);
                 break;
             }
         }
@@ -63,16 +71,20 @@ class Withdraw extends PluginBase implements Listener{
 	public function onPlayerInteract(PlayerInteractEvent $event){
 		$p = $event->getPlayer();
 		$i = $event->getItem();
+		$cfg = $this->getConfig();
+		$mm = $cfg->get("prefix");
+		$confirmation = $cfg->get("confirmation");
+		$success = $cfg->get("success");
 		if($i->getID() !== 339 || ($money = $i->getDamage()) < 1) return;
 		if(!isset($this->touch[$n = $p->getName()])) $this->touch[$n] = 0;
 		$c = microtime(true) - $this->touch[$n];
 		if($c > 0){
-			$p->sendMessage("§8[§aWithdraw§8] §bIf you want to use this check, tap again! \n §bCheque Info : §e$$money");
+			$p->sendMessage("$mm $confirmation");
 		}else{
 			$i->setCount($i->getCount() - 1);
 			$p->getInventory()->setItem($p->getInventory()->getHeldItemSlot(), $i);
 			$this->giveMoney($p, $money);
-			$p->sendMessage("§8[§aWithdraw§8] §bSuccessfully redeemed cheque! \n §a§l+$$money");
+			$p->sendMessage("$mm $success");
 		}
 		$this->touch[$n] = microtime(true) + 1;
 		if(isset($m)) $p->sendMessage($m);
