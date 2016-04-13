@@ -67,12 +67,12 @@ class Withdraw extends PluginBase implements Listener{
 		if(!isset($this->touch[$n = $p->getName()])) $this->touch[$n] = 0;
 		$c = microtime(true) - $this->touch[$n];
 		if($c > 0){
-			$p->sendMessage= ("§8[§aWithdraw§8] §bIf you want to use this check, tap again! \n §bCheque Info : §e$" . $money .);
+			$p->sendMessage= ("§8[§aWithdraw§8] §bIf you want to use this check, tap again! \n §bCheque Info : §e$$money");
 		}else{
 			$i->setCount($i->getCount() - 1);
 			$p->getInventory()->setItem($p->getInventory()->getHeldItemSlot(), $i);
 			$this->giveMoney($p, $money);
-			$p->sendMessage= ("§8[§aWithdraw§8] §bSuccessfully redeemed cheque! \n §a§l+$" . $money .);
+			$p->sendMessage= ("§8[§aWithdraw§8] §bSuccessfully redeemed cheque! \n §a§l+$$money");
 		}
 		$this->touch[$n] = microtime(true) + 1;
 		if(isset($m)) $p->sendMessage($m);
