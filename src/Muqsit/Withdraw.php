@@ -52,7 +52,8 @@ class Withdraw extends PluginBase implements Listener{
 	}
 
 	public function PlayerItemHeld(PlayerItemHeldEvent $ev){
-	$tip = $this->getConfig("tip");
+        $ss = $this->getConfig();
+	$tip = $ss->get("tip");
         $item = $ev->getItem();
         $money = $item->getDamage();
         $player = $ev->getPlayer();
