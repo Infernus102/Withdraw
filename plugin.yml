@@ -1,0 +1,15 @@
+name: Withdraw
+main: Muqsit\Withdraw
+version: "1.0"
+api: [1.13.1, 2.0.0]
+
+commands:
+ withdraw:
+  permission: cheque.cmd
+  description: Withdraw
+  usage: /withdraw <amount>
+
+permissions:
+ cheque.cmd:
+  default: true
+  description: Withdraw command.
