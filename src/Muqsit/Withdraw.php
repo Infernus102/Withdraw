@@ -16,6 +16,9 @@ use pocketmine\event\player\PlayerItemHeldEvent;
 class Withdraw extends PluginBase implements Listener{
 
 	public function onEnable(){
+		@mkdir($this->getDataFolder());
+                $this->saveDefaultConfig();
+                $this->reloadConfig();
 		$this->getServer()->getLogger()->info("§8[§aWithdraw§8] §eFinding an economy plugin...");
 		$pm = $this->getServer()->getPluginManager();
 		if(!($this->money = $pm->getPlugin("PocketMoney")) && !($this->money = $pm->getPlugin("EconomyAPI")) && !($this->money = $pm->getPlugin("MassiveEconomy")) && !($this->money = $pm->getPlugin("Money"))){
@@ -49,13 +52,14 @@ class Withdraw extends PluginBase implements Listener{
 	}
 
 	public function PlayerItemHeld(PlayerItemHeldEvent $ev){
+	$tip = $this->getConfig("tip");
         $item = $ev->getItem();
         $money = $item->getDamage();
         $player = $ev->getPlayer();
         if($item instanceof Item){
             switch($item->getId()){
                 case 339:
-                    $player->sendTip("§b§lCheque of §r§e$$money");
+                    $player->sendTip($tip);
                 break;
             }
         }
