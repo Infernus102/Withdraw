@@ -1,6 +1,4 @@
-#Withdraw Messages
-prefix: §8[§aWithdraw§8] 
-no-money: §cYou don't have enough money! Your current money: §e$$money
-confirmation: §bIf you want to use this check, tap again! \n §bCheque Info : §e$$money
-success: §bSuccessfully redeemed cheque! \n §a§l+$$money
-tip: §b§lCheque of §r§e$$money
+---
+item: 339
+#Use Item IDs ONLY!
+...
