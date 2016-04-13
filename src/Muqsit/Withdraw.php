@@ -59,7 +59,7 @@ class Withdraw extends PluginBase implements Listener{
         $player = $ev->getPlayer();
         if($item instanceof Item){
             switch($item->getId()){
-                case $configItem:
+                case '$configItem':
                     $player->sendTip("§b§lCheque of §r§e$$money");
                 break;
             }
