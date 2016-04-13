@@ -5,11 +5,11 @@ api: [1.13.1, 2.0.0]
 
 commands:
  withdraw:
-  permission: cheque.cmd
+  permission: withdraw.cmd
   description: Withdraw
   usage: /withdraw <amount>
 
 permissions:
- cheque.cmd:
+ withdraw.cmd:
   default: true
   description: Withdraw command.
