@@ -60,7 +60,7 @@ class Withdraw extends PluginBase implements Listener{
         if($item instanceof Item){
             switch($item->getId()){
                 case 339:
-                    $player->sendTip("$tip $money");
+                    $player->sendPopup("$tip $money");
                 break;
             }
         }
