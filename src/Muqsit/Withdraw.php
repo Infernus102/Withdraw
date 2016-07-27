@@ -33,6 +33,12 @@ class Withdraw extends PluginBase implements Listener{
 	public function onCommand(CommandSender $sender, Command $cmd, $label, array $sub){
 		if(!isset($sub[0])) return false;
 		$mm = "§8[§aWithdraw§8] ";
+		
+		$limit = 95500;
+		if($sub[0] > $limit){
+		  $sender->sendMessage("§c§lError: §r§cThe maximum amount you can withdraw at once is " . $limit . ".");
+		}
+		
 		if(!$sender instanceof Player){
 			$r = $mm . ("§cPlease run this command in game");
 		}elseif(!is_numeric($sub[0]) || $sub[0] < 1){
