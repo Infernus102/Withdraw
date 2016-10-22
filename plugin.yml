@@ -7,7 +7,6 @@ commands:
  withdraw:
   permission: withdraw.cmd
   description: Withdraw
-  usage: /withdraw <amount>
 
 permissions:
  withdraw.cmd:
