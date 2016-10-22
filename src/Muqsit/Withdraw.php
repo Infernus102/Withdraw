@@ -15,17 +15,26 @@ use pocketmine\item\Item;
 class Withdraw extends PluginBase implements Listener{
 
 	$prefix = TF::DARK_GRAY."[".TF::GOLD."Withdraw".TF::DARK_GRAY."] ";
-
+	$money = null;
+	
 	public function onEnable(){
 		@mkdir($this->getDataFolder());
                 $this->saveDefaultConfig();
                 $this->reloadConfig();
 		$pm = $this->getServer()->getPluginManager();
-		if($pm->getPlugin("EconomyAPI") !== null){
-			$this->getServer()->getLogger()->info($this->prefix.TF::RED."An error occurred. EconomyAPI plugin wasn't not found.");
-		}else{
-			$this->getServer()->getLogger()->info($this->prefix.TF::GREEN."Economy plugin found. Using EconomyAPI.");
+		
+		if ($pm->isPluginEnabled("EconomyAPI")){
+			$this->money = $pm->getPlugin("EconomyAPI");
+		} elseif ($pm->isPluginEnabled("EconomyPlus")) {
+			$this->money = $pm->getPlugin("EconomyPlus");
 		}
+		
+		if($this->money == null){
+			$this->getServer()->getLogger()->info($this->prefix.TF::RED."/withdraw disabled. Make sure you have EconomyAPI or EconomyPlus installed.");
+		}else{
+			$this->getServer()->getLogger()->info($this->prefix.TF::GREEN."Found an economy plugin! Using: ".$this->money->getName());
+		}
+		
 		$this->touch = [];
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
@@ -38,7 +47,7 @@ class Withdraw extends PluginBase implements Listener{
 			$sender->sendMessage(TF::RED.$sub[0]."is an invalid number.");
 		}else{
 			if($this->getMoney($sender) < $sub[0]){
-				$sender->sendMessage($this->prefix.TF::RED."You don't have enough money! Your current money: $".$this->getMoney($sender));
+				$sender->sendMessage($this->prefix.TF::RED."You dont have enough money! Your current money: $".$this->getMoney($sender));
 			}else{
 				$this->giveMoney($sender, -$sub[0]);
 				$sender->getInventory()->addItem(Item::get(339, $sub[0], 1));
@@ -81,15 +90,14 @@ class Withdraw extends PluginBase implements Listener{
 	}
 
 	public function getMoney($p){
-		if(!$this->money) return false;
+		if($this->money == null) return false;
 		switch($this->money->getName()){
 			case "EconomyAPI":
 				return $this->money->mymoney($p);
 			break;
-			/*
 			case "EconomyPlus":
+				return $this->money->getInstance()->getMoney($p);
 			break;
-			*/
 			default:
 				return false;
 			break;
@@ -97,15 +105,14 @@ class Withdraw extends PluginBase implements Listener{
 	}
 
 	public function giveMoney($p, $money){
-		if(!$this->money) return false;
+		if($this->money == null) return false;
 		switch($this->money->getName()){
 			case "EconomyAPI":
 				$this->money->setMoney($p, $this->money->mymoney($p) + $money);
 			break;
-			/*
 			case "EconomyPlus":
+				$this->money->getInstance()->setMoney($p, $this->money->getInstance()->getMoney($p) + $money);
 			break;
-			*/
 			default:
 				return false;
 			break;
