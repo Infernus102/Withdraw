@@ -1,7 +1,7 @@
 name: Withdraw
-main: Muqsit\Withdraw
+main: UniversalRemote\Withdraw
 version: "1.0"
-api: [1.13.1, 2.0.0]
+api: [1.13.1, 2.0.0, 2.0.1]
 
 commands:
  withdraw:
