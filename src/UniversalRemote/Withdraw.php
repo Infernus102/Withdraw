@@ -80,7 +80,7 @@ class Withdraw extends PluginBase implements Listener{
 		if(!isset($this->touch[$n = $p->getName()])) $this->touch[$n] = 0;
 		$c = microtime(true) - $this->touch[$n];
 		if($c > 0){
-			$p->sendMessage($this->prefix.TF::GREEN."If you want to use this check, double tap it!\n".TF::GRAY."Cheque value: ".TF::YELLOW."$".$money);
+			$p->sendMessage($this->prefix.TF::GREEN."If you want to use this cheque, double tap it!\n".TF::GRAY."Cheque value: ".TF::YELLOW."$".$money);
 		}else{
 			$i->setCount($i->getCount() - 1);
 			$p->getInventory()->setItem($p->getInventory()->getHeldItemSlot(), $i);
