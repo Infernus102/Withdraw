@@ -95,7 +95,7 @@ class Withdraw extends PluginBase implements Listener{
 		if($this->money == null) return false;
 		switch($this->money->getName()){
 			case "EconomyAPI":
-				return $this->money->mymoney($p);
+				return $this->money->myMoney($p);
 			break;
 			case "EconomyPlus":
 				return $this->money->getInstance()->getMoney($p);
@@ -113,7 +113,7 @@ class Withdraw extends PluginBase implements Listener{
 				$this->money->setMoney($p, $this->money->mymoney($p) + $money);
 			break;
 			case "EconomyPlus":
-				$this->money->getInstance()->setMoney($p, $this->money->getInstance()->getMoney($p) + $money);
+				$this->money->getInstance()->addMoney($p, $money);
 			break;
 			default:
 				return false;
